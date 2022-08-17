@@ -1,0 +1,51 @@
+{%load custom_tags%}
+{%load static%}
+{% load pinax_messages_tags %}
+{%block content %}
+{% load i18n %} 
+
+<header class="header">
+  <nav>
+    <ul class="ul-flex">
+
+    {% if user.is_authenticated %} 
+
+      <div class="items">
+        <li> <a href="{% url 'profile' request.user.profile.pk %}"><i class="far fa-user"></i></a>  </li>
+          
+        <li> <a href="{% url 'account_logout' %}"><i class="fa-solid fa-arrow-right-from-bracket"></i></a> </li>
+
+        <li> <a href="{% url 'inbox' %}" class="inbox-icon"><i class="far fa-paper-plane"></i> </a> </li>
+       <a href="{% url 'pinax_messages:inbox' %}"><i class="fa fa-envelope"></i>  {% trans 'Message Inbox' %}</a>
+        
+  {% endif %}  
+  </div>
+
+    <li> <a {% if user.is_authenticated %} href="{%url 'post-list' %}" {%else%} href="{% url 'index' %}" {%endif%} class="logo"> <img src="{% static '/media/logo.png' %}" alt=""></a></li>
+    <li class="btn"><span class="fas fa-bars"></span></li>
+    
+ 
+    <form method="GET" action="{% url 'search' %}">
+  <li class="search-icon"> 
+    <input type="text" name="q" placeholder="Que cherchez-vous ?" 
+    >    
+    <label class="icon" > 
+         <button class="fas fa-search" type="submit" ></button>
+      </label> 
+    
+   </li> 
+  </form> 
+
+
+</ul>
+</nav>
+
+</header>
+{%endblock%}
+
+<script>
+  $('nav ul li.btn span').click(function(){
+    $('nav ul div.items').toggleClass("show");
+    $('nav ul li.btn span').toggleClass("show");
+  });
+</script>

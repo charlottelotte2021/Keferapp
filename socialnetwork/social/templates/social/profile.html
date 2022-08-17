@@ -1,0 +1,93 @@
+{% extends 'landing/base.html'%}
+{%load crispy_forms_tags %}
+{% load static %}
+{% block content %} 
+
+<div class="container">
+        <div class="back-button">
+            <a href="{% url 'post-list' %}" class="back-button" >Back to feed</a>
+        </div>
+    <div class="row justify-content-center mt-5">
+        <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
+             <div class="text-center">
+
+                    <img src="{{ profile.picture.url }}" class="rounded-circle" width="100" height="100">
+                {% if profile.name %}
+                <a class="py-4">{{profile.name}}
+                    
+                    <span>  
+                      
+                    {%  if request.user == user %}
+                        <a href="{%url 'profile-edit' profile.pk%}" style="color: #333"><i class="far fa-edit"></i></a>
+                        {%endif%}
+                </span>
+                
+                    {% else %}
+                    <h3>{{user.username}}
+                    <span>
+                        {%  if request.user == user %}
+                        <a href="{%url 'profile-edit' profile.pk%}" style="color: #333"><i class="far fa-edit"></i></a>
+                        {%endif%}
+                    </span>
+                   
+                    </h3>
+                    {%endif%}
+                </h3>
+                {% if profile.bio %}
+                <p> {{profile.bio}}</p>
+                {%endif%}
+                
+            </div>
+            <form action="{% url 'create-thread' %}" method="POST">
+                {%csrf_token%}
+                <input type="hidden" name="username" value="{{username}}" />
+                <button class="btn-3 custom-btn">Envoyez un message</button>
+            </form>
+           
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5 ">
+       
+        <div class="card shadow-sm col-md-8 col-sm-8 border-bottom px-5 py-3">
+            <div class="text-center">
+                {% if profile.location %}
+                <p>Location: {{profile.location}}
+                    
+                </p>
+                
+                {%endif%}
+                {% if profile.birth_date %}
+                <p>Birthday: {{profile.birth_date}}</p>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+    {% if profile.address %}
+    <p>{{map | safe }}</p>
+    {%endif%}
+    {% for post in posts %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 col-sm-12 border-bottom">
+            <p> <a href="{% url 'profile' post.author.profile.pk %}" style="text-decoration: none"> {{post.author}} </a>  {{post.created_on}}</p>
+        <div class="position-relative"> 
+                    {%if post.image.count > 0 %}
+                    <div class="row">
+                        {%for img in post.image.all %}
+                            <div class="col-md-4 col-xs-12">
+                                <img src="{{ img.image.url }}" class="post-image">
+                            </div>
+                        {%endfor%}
+                    </div>
+                    {%endif%}
+                    <div class="body">
+                        <p>{{post.body}}</p>
+                    </div>
+             
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+        </div>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+{% endblock content %}
